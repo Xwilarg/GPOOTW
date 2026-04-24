@@ -50,6 +50,12 @@ body {
 
     overflow: hidden;
 }
+@media (max-width: 1000px) {
+    .container {
+        width: 98%;
+    }
+}
+
 .box {
     position: relative;
     border: var(--border);
