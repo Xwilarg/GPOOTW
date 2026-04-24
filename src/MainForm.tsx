@@ -70,14 +70,17 @@ export default function MainForm() {
         {
             video ?
             <div className="container box ">
-                <video controls>
+                <video controls key={`${video.user}/${video.character}`}>
                     <source src={`/data/${video.user}/${video.character}.mp4`} type="video/mp4" />
                 </video>
             </div>
             : <></>
         }
         <div className="container box flex">
-            { characters.map(x => <CharacterForm setVideo={(user) => { setVideo({ character: x, user: user }) }} name={x} displayName={x} />) }
+            { characters.map(x => <CharacterForm setVideo={(user) => {
+                setVideo({ character: x, user: user })
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            }} name={x} displayName={x} />) }
         </div>
     </>
 }
