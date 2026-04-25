@@ -1,5 +1,7 @@
 import { useState } from "react";
 import CharacterForm from "./CharacterForm";
+import { useSearchParams } from "react-router";
+import owData from "../data/data.json";
 
 let characters = [
     "domina",
@@ -65,6 +67,20 @@ interface VideoData
 
 export default function MainForm() {
     const [video, setVideo] = useState<VideoData | null>(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    let allCharacters;
+    const targetCharacter = searchParams.get("c");
+    if (targetCharacter)
+    {
+        const target = owData.find(x => x.name === targetCharacter);
+        if (target)
+        {
+            allCharacters = characters.filter(x => target.characters.includes(x));
+        }
+        else allCharacters = characters;
+    }
+    else allCharacters = characters;
 
     return <>
         {
@@ -77,7 +93,7 @@ export default function MainForm() {
             : <></>
         }
         <div className="container box flex">
-            { characters.map(x => <CharacterForm setVideo={(user) => {
+            { allCharacters.map(x => <CharacterForm key={x} setVideo={(user) => {
                 setVideo({ character: x, user: user })
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             }} name={x} displayName={x} />) }
