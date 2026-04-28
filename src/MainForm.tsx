@@ -3,60 +3,71 @@ import CharacterForm from "./CharacterForm";
 import { useSearchParams } from "react-router";
 import owData from "../data/data.json";
 
+class CharacterData
+{
+    constructor(name: string, displayName: string) {
+        this.name = name;
+        this.displayName = displayName;
+    }
+
+    name: string
+    displayName: string
+}
+
 let characters = [
-    "domina",
-    "doomfist",
-    "dva",
-    "hazard",
-    "junker_queen",
-    "mauga",
-    "orisa",
-    "ramattra",
-    "reinhardt",
-    "roadhog",
-    "sigma",
-    "winston",
-    "wrecking_ball",
-    "zarya",
+    new CharacterData("domina", "Domina"),
+    new CharacterData("doomfist", "Doomfist"),
+    new CharacterData("dva", "D.VA"),
+    new CharacterData("hazard", "Hazard"),
+    new CharacterData("junker_queen", "Junker Queen"),
+    new CharacterData("mauga", "Mauga"),
+    new CharacterData("orisa", "Orisa"),
+    new CharacterData("ramattra", "Ramattra"),
+    new CharacterData("reinhardt", "Reinhardt"),
+    new CharacterData("roadhog", "Roadhog"),
+    new CharacterData("sigma", "Sigma"),
+    new CharacterData("winston", "Winston"),
+    new CharacterData("wrecking_ball", "Wreacking Ball"),
+    new CharacterData("zarya", "Zarya"),
 
-    "anran",
-    "ashe",
-    "bastion",
-    "cassidy",
-    "echo",
-    "emre",
-    "freja",
-    "genji",
-    "hanzo",
-    "junkrat",
-    "mei",
-    "pharah",
-    "reaper",
-    "sierra",
-    "sojourn",
-    "soldier_76",
-    "sombra",
-    "symmetra",
-    "torbjorn",
-    "tracer",
-    "vendetta",
-    "venture",
-    "widowmaker",
+    new CharacterData("anran", "Anran"),
+    new CharacterData("ashe", "Ashe"),
+    new CharacterData("bastion", "Bastion"),
+    new CharacterData("cassidy", "Cassidy"),
+    new CharacterData("echo", "Echo"),
+    new CharacterData("emre", "Emre"),
+    new CharacterData("freja", "Freja"),
+    new CharacterData("genji", "Genji"),
+    new CharacterData("hanzo", "Hanzo"),
+    new CharacterData("junkrat", "Junkrat"),
+    new CharacterData("mei", "Mei"),
+    new CharacterData("pharah", "Pharah"),
+    new CharacterData("reaper", "Reaper"),
+    new CharacterData("sierra", "Sierra"),
+    new CharacterData("sojourn", "Sojourn"),
+    new CharacterData("soldier_76", "Soldier: 76"),
+    new CharacterData("sombra", "Sombra"),
+    new CharacterData("symmetra", "Symmetra"),
+    new CharacterData("torbjorn", "Torbjörn"),
+    new CharacterData("tracer", "Tracer"),
+    new CharacterData("vendetta", "Vendetta"),
+    new CharacterData("venture", "Venture"),
+    new CharacterData("widowmaker", "Widowmaker"),
 
-    "ana",
-    "baptiste",
-    "brigitte",
-    "illari",
-    "jetpack_cat",
-    "juno",
-    "kiriko",
-    "lifeweaver",
-    "lucio",
-    "mercy",
-    "mizuki",
-    "moira",
-    "wuyang",
-    "zenyatta"
+    new CharacterData("ana", "Ana"),
+    new CharacterData("baptiste", "Baptiste"),
+    new CharacterData("brigitte", "Brigitte"),
+    new CharacterData("illari", "Illari"),
+    new CharacterData("jetpack_cat", "Jetpack Cat"),
+    new CharacterData("juno", "Juno"),
+    new CharacterData("kiriko", "Kiriko"),
+    new CharacterData("lifeweaver", "Lifeweaver"),
+    new CharacterData("lucio", "Lúcio"),
+    new CharacterData("mercy", "Mercy",),
+    new CharacterData("mizuki", "Miyuki"),
+    new CharacterData("moira", "Moira"),
+    new CharacterData("wuyang", "Wuyang"),
+    new CharacterData("zenyatta", "Zenyatta")
 ];
 
 interface VideoData
@@ -92,7 +103,7 @@ export default function MainForm() {
         const target = owData.find(x => x.name === targetCharacter);
         if (target)
         {
-            allCharacters = characters.filter(x => target.characters.includes(x));
+            allCharacters = characters.filter(x => target.characters.includes(x.name));
             battleUsers = [ target.battle_username ];
         }
     }
@@ -140,10 +151,10 @@ export default function MainForm() {
             </div>
         }
         <div className="container box flex">
-            { allCharacters.map(x => <CharacterForm key={x} setVideo={(user) => {
-                setVideo({ character: x, user: user })
+            { allCharacters.map(x => <CharacterForm key={x.name} setVideo={(user) => {
+                setVideo({ character: x.name, user: user })
                 window.scrollTo({ top: 0, behavior: 'smooth' })
-            }} name={x} displayName={x} />) }
+            }} name={x.name} displayName={x.displayName} />) }
         </div>
     </>
 }
