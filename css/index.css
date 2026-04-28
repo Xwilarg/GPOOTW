@@ -69,6 +69,12 @@ body {
     justify-content: center;
 }
 
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .card {
     padding: 10px;
     width: 180px;
@@ -96,4 +102,36 @@ body {
 
 video {
     width: 100%;
+}
+
+.profile-summary .box {
+    background-position: center center;
+    background-size: cover;
+    width: 480px;
+}
+
+.profile-summary {
+    text-align: center;
+}
+
+.profile-summary .all-ranks {
+    background-color: rgba(0, 0, 0, 0.466);
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.profile-summary .all-ranks > div{
+    width: 100px;
+}
+
+.profile-summary .avatar {
+    width: 60px;
+    border-radius: 25px;
+}
+
+.profile-summary .rank {
+    width: 40px;
+}
+.profile-summary .tier {
+    width: 50px;
 }
