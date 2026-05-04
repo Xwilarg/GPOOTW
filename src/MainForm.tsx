@@ -122,7 +122,7 @@ export default function MainForm() {
 
             <div className="container box flex profile-summary">
                 {
-                    stats.filter(x => battleUsers.includes(x.username)).sort((a: OWData, b: OWData) => {
+                    stats.filter(x => x != null && battleUsers.includes(x.username)).sort((a: OWData, b: OWData) => {
                         return owData.find(x => x.battle_username === b.username)!.characters.length - owData.find(x => x.battle_username === a.username)!.characters.length
                     }).map(x => <div className="box" style={{
                         backgroundImage: `url("${x.namecard}")`
