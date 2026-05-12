@@ -96,7 +96,7 @@ export default function MainForm() {
     }, [])
 
     let allCharacters = characters;
-    let battleUsers = owData.map(x => x.battle_username);
+    let filterUser = owData.map(x => x.name);
     const targetCharacter = searchParams.get("c");
     if (targetCharacter)
     {
@@ -104,7 +104,7 @@ export default function MainForm() {
         if (target)
         {
             allCharacters = characters.filter(x => target.characters.some(y => y.name === x.name));
-            battleUsers = [ target.battle_username ];
+            filterUser = [ targetCharacter ];
         }
     }
 
@@ -122,32 +122,41 @@ export default function MainForm() {
 
             <div className="container box flex profile-summary">
                 {
-                    stats.filter(x => x != null && battleUsers.includes(x.username)).sort((a: OWData, b: OWData) => {
-                        return owData.find(x => x.battle_username === b.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 1.5 : 1), 0) - owData.find(x => x.battle_username === a.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 2 : 1), 0)
-                    }).map(x => <div className="box" style={{
-                        backgroundImage: `url("${x.namecard}")`
-                    }}>
-                        <h2>{x.username}</h2>
-                        <img className="avatar" src={x.avatar} />
-                        <div className="flex all-ranks">
-                            <div className="flex-col">
-                                <h3>Tank</h3>
-                                <img className="rank" src={x.competitive.pc.tank.rank_icon} />
-                                <img className="tier" src={x.competitive.pc.tank.tier_icon} />
+                    owData.filter(x => filterUser.includes(x.name)).sort((a, b) => {
+                        return b.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0) - a.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0)
+                    }).map(x => {
+                        const ow = stats.find(y => x.battle_username == y.username)
+                        if (!ow) {
+                            return <div className="box">
+                                <h2>{x.display_name}</h2>
+                                <span className="debug-score">{Math.round(x.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
+                            </div>;
+                        }
+                        return <div className="box" style={{
+                            backgroundImage: `url("${ow.namecard}")`
+                        }}>
+                            <h2>{x.display_name}</h2>
+                            <img className="avatar" src={ow.avatar} />
+                            <div className="flex all-ranks">
+                                <div className="flex-col">
+                                    <h3>Tank</h3>
+                                    <img className="rank" src={ow.competitive.pc.tank.rank_icon} />
+                                    <img className="tier" src={ow.competitive.pc.tank.tier_icon} />
+                                </div>
+                                <div className="flex-col">
+                                    <h3>Damage</h3>
+                                    <img className="rank" src={ow.competitive.pc.damage.rank_icon} />
+                                    <img className="tier" src={ow.competitive.pc.damage.tier_icon} />
+                                </div>
+                                <div className="flex-col">
+                                    <h3>Support</h3>
+                                    <img className="rank" src={ow.competitive.pc.support.rank_icon} />
+                                    <img className="tier" src={ow.competitive.pc.support.tier_icon} />
+                                </div>
                             </div>
-                            <div className="flex-col">
-                                <h3>Damage</h3>
-                                <img className="rank" src={x.competitive.pc.damage.rank_icon} />
-                                <img className="tier" src={x.competitive.pc.damage.tier_icon} />
-                            </div>
-                            <div className="flex-col">
-                                <h3>Support</h3>
-                                <img className="rank" src={x.competitive.pc.support.rank_icon} />
-                                <img className="tier" src={x.competitive.pc.support.tier_icon} />
-                            </div>
-                        </div>
-                        <span className="debug-score">{Math.round(owData.find(y => y.battle_username === x.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 1.5 : 1), 0))} points</span>
-                    </div>)
+                            <span className="debug-score">{Math.round(x.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
+                        </div>;
+                    })
                 }
             </div>
         }
