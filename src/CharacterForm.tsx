@@ -22,7 +22,7 @@ const CharacterForm = forwardRef((
         if (u) validUsers = [ u ];
     }
 
-    if (!validUsers) validUsers = owData.filter(x => x.characters.includes(name));
+    if (!validUsers) validUsers = owData.filter(x => x.characters.some(y => name === y.name));
 
     return <div className="card box">
         <img className="card-img" src={`/img/characters/${name}.png`} />
