@@ -61,6 +61,13 @@ body {
     border: var(--border);
     border-radius: var(--border-radius);
 }
+.debug-score {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: gray;
+    font-size: 0.75em;
+}
 
 .flex {
     display: flex;

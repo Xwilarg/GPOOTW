@@ -7,7 +7,14 @@ if ($shouldUpdate) {
     $json = json_decode(file_get_contents("../data/data.json"), true);
     $data = [];
     foreach ($json as $elem) {
-        array_push($data, json_decode(file_get_contents("https://overfast-api.tekrop.fr/players/{$elem["battle_username"]}-{$elem["battle_tag"]}/summary"), true));
+        if ($elem["battle_username"] === null)
+        {
+            array_push($data, null);
+        }
+        else
+        {
+            array_push($data, json_decode(file_get_contents("https://overfast-api.tekrop.fr/players/{$elem["battle_username"]}-{$elem["battle_tag"]}/summary"), true));
+        }
     }
 
     $updatedData = json_encode([ "last_update" => time(), "data" => $data ]);

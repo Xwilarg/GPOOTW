@@ -103,7 +103,7 @@ export default function MainForm() {
         const target = owData.find(x => x.name === targetCharacter);
         if (target)
         {
-            allCharacters = characters.filter(x => target.characters.includes(x.name));
+            allCharacters = characters.filter(x => target.characters.some(y => y.name === x.name));
             battleUsers = [ target.battle_username ];
         }
     }
@@ -123,7 +123,7 @@ export default function MainForm() {
             <div className="container box flex profile-summary">
                 {
                     stats.filter(x => x != null && battleUsers.includes(x.username)).sort((a: OWData, b: OWData) => {
-                        return owData.find(x => x.battle_username === b.username)!.characters.length - owData.find(x => x.battle_username === a.username)!.characters.length
+                        return owData.find(x => x.battle_username === b.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 1.5 : 1), 0) - owData.find(x => x.battle_username === a.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 2 : 1), 0)
                     }).map(x => <div className="box" style={{
                         backgroundImage: `url("${x.namecard}")`
                     }}>
@@ -146,6 +146,7 @@ export default function MainForm() {
                                 <img className="tier" src={x.competitive.pc.support.tier_icon} />
                             </div>
                         </div>
+                        <span className="debug-score">{Math.round(owData.find(y => y.battle_username === x.username)!.characters.reduce((sum, x) => sum + x.kill / (x.ultimate ? 1.5 : 1), 0))} points</span>
                     </div>)
                 }
             </div>
