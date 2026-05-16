@@ -103,7 +103,20 @@ body {
     border-radius: 25px;
 }
 
-.button {
+
+button, .button {
+    background-color: transparent;
+    border: var(--border);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 10px;
+    cursor: pointer;
+    font-family: "Quantico", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.hint-click {
     cursor: pointer;
 }
 
@@ -115,6 +128,7 @@ video {
     background-position: center center;
     background-size: cover;
     width: 480px;
+    height: 300px;
 }
 
 .profile-summary {
@@ -125,6 +139,9 @@ video {
     background-color: rgba(0, 0, 0, 0.466);
     border-radius: var(--border-radius);
     padding: 5px;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }
 
 .profile-summary .all-ranks > div{

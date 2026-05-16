@@ -74,6 +74,7 @@ interface VideoData
 {
     character: string
     user: string
+    folder: string
 }
 
 interface OWData
@@ -88,6 +89,7 @@ export default function MainForm() {
     const [video, setVideo] = useState<VideoData | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const [stats, setStats] = useState<OWData[]>([]);
+    const [folder, setFolder] = useState("comp");
 
     useEffect(() => {
         fetch('/php/stats.php')
@@ -112,8 +114,8 @@ export default function MainForm() {
         {
             video ?
             <div className="container box ">
-                <video controls key={`${video.user}/${video.character}`}>
-                    <source src={`/data/${video.user}/${video.character}.mp4`} type="video/mp4" />
+                <video controls key={`${video.user}/${video.folder}/${video.character}`}>
+                    <source src={`/data/${video.user}/${video.folder}/${video.character}.mp4`} type="video/mp4" />
                 </video>
             </div>
             : <></>
@@ -123,13 +125,13 @@ export default function MainForm() {
             <div className="container box flex profile-summary">
                 {
                     owData.filter(x => filterUser.includes(x.name)).sort((a, b) => {
-                        return b.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0) - a.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0)
+                        return b.characters[folder].reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0) - a.characters[folder].reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0)
                     }).map(x => {
                         const ow = stats.find(y => x.battle_username == y.username)
                         if (!ow) {
                             return <div className="box">
                                 <h2>{x.display_name}</h2>
-                                <span className="debug-score">{Math.round(x.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
+                                <span className="debug-score">{Math.round(x.characters[folder].reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
                             </div>;
                         }
                         return <div className="box" style={{
@@ -137,32 +139,41 @@ export default function MainForm() {
                         }}>
                             <h2>{x.display_name}</h2>
                             <img className="avatar" src={ow.avatar} />
-                            <div className="flex all-ranks">
-                                <div className="flex-col">
-                                    <h3>Tank</h3>
-                                    <img className="rank" src={ow.competitive.pc.tank.rank_icon} />
-                                    <img className="tier" src={ow.competitive.pc.tank.tier_icon} />
+                            {
+                                folder === "comp" ?
+                                <div className="flex all-ranks">
+                                    <div className="flex-col">
+                                        <h3>Tank</h3>
+                                        <img className="rank" src={ow.competitive.pc.tank.rank_icon} />
+                                        <img className="tier" src={ow.competitive.pc.tank.tier_icon} />
+                                    </div>
+                                    <div className="flex-col">
+                                        <h3>Damage</h3>
+                                        <img className="rank" src={ow.competitive.pc.damage.rank_icon} />
+                                        <img className="tier" src={ow.competitive.pc.damage.tier_icon} />
+                                    </div>
+                                    <div className="flex-col">
+                                        <h3>Support</h3>
+                                        <img className="rank" src={ow.competitive.pc.support.rank_icon} />
+                                        <img className="tier" src={ow.competitive.pc.support.tier_icon} />
+                                    </div>
                                 </div>
-                                <div className="flex-col">
-                                    <h3>Damage</h3>
-                                    <img className="rank" src={ow.competitive.pc.damage.rank_icon} />
-                                    <img className="tier" src={ow.competitive.pc.damage.tier_icon} />
-                                </div>
-                                <div className="flex-col">
-                                    <h3>Support</h3>
-                                    <img className="rank" src={ow.competitive.pc.support.rank_icon} />
-                                    <img className="tier" src={ow.competitive.pc.support.tier_icon} />
-                                </div>
-                            </div>
-                            <span className="debug-score">{Math.round(x.characters.reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
+                                : <></>
+                            }
+                            <span className="debug-score">{Math.round(x.characters[folder].reduce((sum, x) => sum + x.kill + (x.ultkill * .85) + x.shutdown, 0))} points</span>
                         </div>;
                     })
                 }
             </div>
         }
+        <div className="container box flex flex-center-hor">
+            <button onClick={_ => setFolder("comp")}>Competitive</button>
+            <button onClick={_ => setFolder("qp")}>Quick Play</button>
+            <button onClick={_ => setFolder("mystery")}>Mystery Heroes</button>
+        </div>
         <div className="container box flex">
-            { allCharacters.map(x => <CharacterForm key={x.name} setVideo={(user) => {
-                setVideo({ character: x.name, user: user })
+            { allCharacters.map(x => <CharacterForm key={x.name} folder={folder} setVideo={(user) => {
+                setVideo({ character: x.name, user: user, folder: folder })
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             }} name={x.name} displayName={x.displayName} />) }
         </div>
